@@ -1,37 +1,75 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: [:show, :update, :destroy]
-  before_action :require_admision!, only: [:create, :update, :destroy]
+  before_action :set_event, only: [ :show, :update, :destroy ]
+  before_action :require_admision!, only: [ :create, :update, :destroy ]
 
   def index
     @events = Event.all
-    render json: @events
+
+    # Filtrado por búsqueda
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @events = @events.where("name ILIKE ? OR event_type ILIKE ?", search_term, search_term)
+    end
+
+    # Ordenamiento
+    @events = @events.order(date: :desc)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @events }
+    end
   end
 
   def show
-    render json: @event
+    respond_to do |format|
+      format.html
+      format.json { render json: @event }
+    end
   end
 
   def create
     @event = Event.new(event_params)
     if @event.save
-      render json: @event, status: :created
+      respond_to do |format|
+        format.html { redirect_to @event, notice: "Evento creado exitosamente." }
+        format.json { render json: @event, status: :created }
+      end
     else
-      render json: @event.errors, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   def update
     if @event.update(event_params)
-      render json: @event
+      respond_to do |format|
+        format.html { redirect_to @event, notice: "Evento actualizado exitosamente." }
+        format.json { render json: @event }
+      end
     else
-      render json: @event.errors, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @event.destroy
-    head :no_content
+    respond_to do |format|
+      format.html { redirect_to events_url, notice: "Evento eliminado exitosamente." }
+      format.json { head :no_content }
+    end
+  end
+
+  def new
+    @event = Event.new
+  end
+
+  def edit
   end
 
   private

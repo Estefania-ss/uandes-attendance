@@ -1,0 +1,201 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Eventos", events_path %></li>
+          <li class="breadcrumb-item active" aria-current="page"><%= @event.name %></li>
+        </ol>
+      </nav>
+
+      <!-- Header del evento -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <div class="d-flex align-items-center mb-3">
+                <h1 class="mb-0 me-3"><%= @event.name %></h1>
+                <span class="badge bg-primary fs-6"><%= @event.event_type %></span>
+              </div>
+              <p class="text-muted mb-2">
+                <i class="bi bi-calendar-date"></i> 
+                <%= @event.date.strftime("%A, %d de %B de %Y") %>
+              </p>
+              <% if @event.campaign_id.present? %>
+                <p class="text-muted mb-0">
+                  <i class="bi bi-tag"></i> 
+                  Campaña: <%= @event.campaign_id %>
+                </p>
+              <% end %>
+            </div>
+            <div class="col-md-4 text-end">
+              <div class="btn-group" role="group">
+                <%= link_to edit_event_path(@event), class: "btn btn-outline-primary" do %>
+                  <i class="bi bi-pencil"></i> Editar
+                <% end %>
+                <%= link_to events_path, class: "btn btn-outline-secondary" do %>
+                  <i class="bi bi-arrow-left"></i> Volver
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas del evento -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card text-center border-primary">
+            <div class="card-body">
+              <h3 class="text-primary"><%= @event.total_applicants %></h3>
+              <p class="card-text">Total Postulantes</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center border-success">
+            <div class="card-body">
+              <h3 class="text-success"><%= @event.confirmed_attendances %></h3>
+              <p class="card-text">Asistencias Confirmadas</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center border-info">
+            <div class="card-body">
+              <h3 class="text-info"><%= @event.attendance_rate %>%</h3>
+              <p class="card-text">Tasa de Asistencia</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center border-warning">
+            <div class="card-body">
+              <h3 class="text-warning"><%= @event.attendances.where(status: 'pendiente').count %></h3>
+              <p class="card-text">Pendientes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información detallada -->
+      <div class="row">
+        <div class="col-md-8">
+          <!-- Lista de asistencias -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-people"></i> Asistencias
+              </h5>
+            </div>
+            <div class="card-body">
+              <% if @event.attendances.any? %>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Postulante</th>
+                        <th>Estado</th>
+                        <th>Fecha de Registro</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @event.attendances.includes(:applicant).each do |attendance| %>
+                        <tr>
+                          <td>
+                            <strong><%= attendance.applicant&.name || 'N/A' %></strong>
+                            <br>
+                            <small class="text-muted"><%= attendance.applicant&.email || 'N/A' %></small>
+                          </td>
+                          <td>
+                            <% case attendance.status %>
+                            <% when 'confirmado' %>
+                              <span class="badge bg-success">Confirmado</span>
+                            <% when 'pendiente' %>
+                              <span class="badge bg-warning">Pendiente</span>
+                            <% when 'cancelado' %>
+                              <span class="badge bg-danger">Cancelado</span>
+                            <% else %>
+                              <span class="badge bg-secondary"><%= attendance.status %></span>
+                            <% end %>
+                          </td>
+                          <td>
+                            <small class="text-muted">
+                              <%= attendance.created_at.strftime("%d/%m/%Y %H:%M") %>
+                            </small>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <div class="text-center py-4">
+                  <i class="bi bi-people display-4 text-muted"></i>
+                  <p class="text-muted mt-3">No hay asistencias registradas para este evento</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <!-- Información adicional -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-info-circle"></i> Información del Evento
+              </h6>
+            </div>
+            <div class="card-body">
+              <dl class="row mb-0">
+                <dt class="col-sm-6">ID del Evento:</dt>
+                <dd class="col-sm-6"><%= @event.id %></dd>
+                
+                <dt class="col-sm-6">Tipo:</dt>
+                <dd class="col-sm-6"><%= @event.event_type %></dd>
+                
+                <dt class="col-sm-6">Fecha:</dt>
+                <dd class="col-sm-6"><%= @event.date.strftime("%d/%m/%Y") %></dd>
+                
+                <% if @event.campaign_id.present? %>
+                  <dt class="col-sm-6">Campaña:</dt>
+                  <dd class="col-sm-6"><%= @event.campaign_id %></dd>
+                <% end %>
+                
+                <dt class="col-sm-6">Creado:</dt>
+                <dd class="col-sm-6"><%= @event.created_at.strftime("%d/%m/%Y") %></dd>
+                
+                <dt class="col-sm-6">Actualizado:</dt>
+                <dd class="col-sm-6"><%= @event.updated_at.strftime("%d/%m/%Y") %></dd>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Acciones rápidas -->
+          <div class="card">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="bi bi-lightning"></i> Acciones Rápidas
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <%= link_to new_attendance_path(event_id: @event.id), class: "btn btn-success btn-sm" do %>
+                  <i class="bi bi-plus-circle"></i> Agregar Asistencia
+                <% end %>
+                <%= link_to attendances_path(event_id: @event.id), class: "btn btn-info btn-sm" do %>
+                  <i class="bi bi-list-check"></i> Ver Todas las Asistencias
+                <% end %>
+                <%= link_to "#", class: "btn btn-warning btn-sm" do %>
+                  <i class="bi bi-download"></i> Exportar Datos
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

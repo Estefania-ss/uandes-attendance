@@ -1,0 +1,164 @@
+<div class="search-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1 class="text-white text-center mb-4">
+          <i class="bi bi-calendar-event"></i> Eventos UANDES
+        </h1>
+        
+        <%= form_with url: events_path, method: :get, local: true, class: "mb-4" do |form| %>
+          <div class="input-group input-group-lg">
+            <%= form.text_field :search, 
+                value: params[:search], 
+                placeholder: "Buscar eventos por nombre o tipo...", 
+                class: "form-control border-0 shadow-sm",
+                autocomplete: "off" %>
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-search"></i> Buscar
+            </button>
+            <% if params[:search].present? %>
+              <%= link_to "Limpiar", events_path, class: "btn btn-outline-light" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Estadísticas -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="stats-card text-center">
+        <h3><%= @events.count %></h3>
+        <p class="mb-0">Total de Eventos</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card text-center">
+        <h3><%= @events.where("date >= ?", Date.current).count %></h3>
+        <p class="mb-0">Eventos Futuros</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card text-center">
+        <h3><%= @events.where("date < ?", Date.current).count %></h3>
+        <p class="mb-0">Eventos Pasados</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card text-center">
+        <h3><%= @events.distinct.count(:event_type) %></h3>
+        <p class="mb-0">Tipos de Evento</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón para crear nuevo evento -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <%= link_to new_event_path, class: "btn btn-success" do %>
+        <i class="bi bi-plus-circle"></i> Crear Nuevo Evento
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Resultados de búsqueda -->
+  <% if params[:search].present? %>
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle"></i> 
+      Mostrando <%= @events.count %> resultado(s) para "<%= params[:search] %>"
+    </div>
+  <% end %>
+
+  <!-- Lista de eventos -->
+  <% if @events.any? %>
+    <div class="row">
+      <% @events.each do |event| %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card event-card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0"><%= event.name %></h5>
+                <span class="badge bg-primary event-type-badge">
+                  <%= event.event_type %>
+                </span>
+              </div>
+              
+              <div class="mb-3">
+                <p class="text-muted mb-2">
+                  <i class="bi bi-calendar-date"></i> 
+                  <%= event.date.strftime("%d/%m/%Y") %>
+                </p>
+                <% if event.campaign_id.present? %>
+                  <p class="text-muted mb-2">
+                    <i class="bi bi-tag"></i> 
+                    Campaña: <%= event.campaign_id %>
+                  </p>
+                <% end %>
+              </div>
+              
+              <div class="row text-center mb-3">
+                <div class="col-4">
+                  <small class="text-muted">Postulantes</small>
+                  <div class="fw-bold"><%= event.total_applicants %></div>
+                </div>
+                <div class="col-4">
+                  <small class="text-muted">Confirmados</small>
+                  <div class="fw-bold text-success"><%= event.confirmed_attendances %></div>
+                </div>
+                <div class="col-4">
+                  <small class="text-muted">Asistencia</small>
+                  <div class="fw-bold text-primary"><%= event.attendance_rate %>%</div>
+                </div>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <%= link_to event_path(event), class: "btn btn-outline-primary btn-sm" do %>
+                  <i class="bi bi-eye"></i> Ver Detalles
+                <% end %>
+                <%= link_to edit_event_path(event), class: "btn btn-outline-secondary btn-sm" do %>
+                  <i class="bi bi-pencil"></i> Editar
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <i class="bi bi-calendar-x display-1 text-muted"></i>
+      <h3 class="text-muted mt-3">
+        <% if params[:search].present? %>
+          No se encontraron eventos que coincidan con tu búsqueda
+        <% else %>
+          No hay eventos registrados
+        <% end %>
+      </h3>
+      <p class="text-muted">
+        <% if params[:search].present? %>
+          Intenta con otros términos de búsqueda o 
+          <%= link_to "ver todos los eventos", events_path %>
+        <% else %>
+          <%= link_to "Crea el primer evento", new_event_path, class: "btn btn-primary" %>
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Auto-submit del formulario de búsqueda cuando se presiona Enter
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.target.form.submit();
+        }
+      });
+    }
+  });
+</script> 

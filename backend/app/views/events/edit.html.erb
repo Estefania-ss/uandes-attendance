@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Eventos", events_path %></li>
+          <li class="breadcrumb-item"><%= link_to @event.name, event_path(@event) %></li>
+          <li class="breadcrumb-item active" aria-current="page">Editar</li>
+        </ol>
+      </nav>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="bi bi-pencil"></i> Editar Evento
+          </h3>
+        </div>
+        <div class="card-body">
+          <%= form_with model: @event, local: true do |form| %>
+            <% if @event.errors.any? %>
+              <div class="alert alert-danger">
+                <h5>Se encontraron los siguientes errores:</h5>
+                <ul>
+                  <% @event.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :name, "Nombre del Evento", class: "form-label" %>
+                  <%= form.text_field :name, class: "form-control", placeholder: "Ej: Charla de Ingeniería 2024" %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :event_type, "Tipo de Evento", class: "form-label" %>
+                  <%= form.select :event_type, 
+                      options_for_select([
+                        ['Charla', 'charla'],
+                        ['Seminario', 'seminario'],
+                        ['Taller', 'taller'],
+                        ['Conferencia', 'conferencia'],
+                        ['Workshop', 'workshop'],
+                        ['Otro', 'otro']
+                      ], @event.event_type), 
+                      { prompt: "Selecciona un tipo" }, 
+                      { class: "form-select" } %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :date, "Fecha del Evento", class: "form-label" %>
+                  <%= form.date_field :date, class: "form-control" %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :campaign_id, "ID de Campaña (Opcional)", class: "form-label" %>
+                  <%= form.text_field :campaign_id, class: "form-control", placeholder: "Ej: CAMP2024-001" %>
+                  <div class="form-text">Identificador único de la campaña asociada</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to event_path(@event), class: "btn btn-secondary" do %>
+                <i class="bi bi-arrow-left"></i> Cancelar
+              <% end %>
+              <div>
+                <%= form.submit "Actualizar Evento", class: "btn btn-primary" %>
+                <%= link_to event_path(@event), 
+                    data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de que quieres eliminar este evento?" }, 
+                    class: "btn btn-danger ms-2" do %>
+                  <i class="bi bi-trash"></i> Eliminar
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
