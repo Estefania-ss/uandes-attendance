@@ -33,4 +33,3 @@ end
 puts "Usuarios creados:"
 puts "- Admisión: #{admision_user.email} (contraseña: 123456)"
 puts "- Embajador: #{embajador_user.email} (contraseña: 123456)"
-

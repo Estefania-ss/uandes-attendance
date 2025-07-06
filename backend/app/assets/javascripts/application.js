@@ -1,10 +1,8 @@
-// Este archivo ha sido migrado a app/assets/javascripts/application.js para el asset pipeline clásico de Rails.
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
-import "controllers"
-import "@rails/ujs"
+//= require rails-ujs
+//= require_tree .
 
 // Funcionalidad adicional para la aplicación
+
 document.addEventListener('DOMContentLoaded', function() {
   // Auto-submit del formulario de búsqueda cuando se presiona Enter
   const searchInput = document.querySelector('input[name="search"]');
