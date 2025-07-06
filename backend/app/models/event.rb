@@ -1,2 +1,25 @@
 class Event < ApplicationRecord
+  has_many :attendances, dependent: :destroy
+  has_many :applicants, through: :attendances
+  has_many :rooms, dependent: :destroy
+  has_many :room_assignments, dependent: :destroy
+
+  validates :name, presence: true
+  validates :date, presence: true
+  validates :event_type, presence: true
+  validates :campaign_id, uniqueness: true, allow_blank: true
+
+  # Métodos helper
+  def total_applicants
+    applicants.count
+  end
+
+  def confirmed_attendances
+    attendances.where(status: 'confirmado').count
+  end
+
+  def attendance_rate
+    return 0 if total_applicants.zero?
+    (confirmed_attendances.to_f / total_applicants * 100).round(2)
+  end
 end

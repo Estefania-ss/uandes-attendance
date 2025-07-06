@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_28_123625) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_06_213845) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_28_123625) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "candidate_id"
+    t.string "last_name"
+    t.string "graduation_year"
+    t.string "graduation_status"
+    t.string "phone"
+    t.string "career_interest_2"
+    t.string "region"
   end
 
   create_table "attendances", force: :cascade do |t|
@@ -41,6 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_28_123625) do
     t.string "event_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "campaign_id"
   end
 
   create_table "room_assignments", force: :cascade do |t|
