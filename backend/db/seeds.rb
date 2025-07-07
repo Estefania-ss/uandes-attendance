@@ -33,3 +33,54 @@ end
 puts "Usuarios creados:"
 puts "- Admisión: #{admision_user.email} (contraseña: 123456)"
 puts "- Embajador: #{embajador_user.email} (contraseña: 123456)"
+
+# Crear eventos de prueba
+puts "Creando eventos de prueba..."
+
+# Eventos pasados
+Event.find_or_create_by!(name: 'Charla de Ingeniería 2023') do |event|
+  event.date = Date.current - 30.days
+  event.event_type = 'charla'
+  event.campaign_id = 'CAMP2023-001'
+end
+
+Event.find_or_create_by!(name: 'Seminario de Medicina 2023') do |event|
+  event.date = Date.current - 15.days
+  event.event_type = 'seminario'
+  event.campaign_id = 'CAMP2023-002'
+end
+
+Event.find_or_create_by!(name: 'Workshop de Programación 2023') do |event|
+  event.date = Date.current - 7.days
+  event.event_type = 'workshop'
+  event.campaign_id = 'CAMP2023-003'
+end
+
+# Eventos futuros
+Event.find_or_create_by!(name: 'Charla de Ingeniería 2024') do |event|
+  event.date = Date.current + 7.days
+  event.event_type = 'charla'
+  event.campaign_id = 'CAMP2024-001'
+end
+
+Event.find_or_create_by!(name: 'Seminario de Medicina 2024') do |event|
+  event.date = Date.current + 15.days
+  event.event_type = 'seminario'
+  event.campaign_id = 'CAMP2024-002'
+end
+
+Event.find_or_create_by!(name: 'Conferencia de Negocios 2024') do |event|
+  event.date = Date.current + 30.days
+  event.event_type = 'conferencia'
+  event.campaign_id = 'CAMP2024-003'
+end
+
+Event.find_or_create_by!(name: 'Taller de Liderazgo 2024') do |event|
+  event.date = Date.current + 45.days
+  event.event_type = 'taller'
+  event.campaign_id = 'CAMP2024-004'
+end
+
+puts "Eventos de prueba creados:"
+puts "- 3 eventos pasados (no editables)"
+puts "- 4 eventos futuros (editables)"

@@ -36,14 +36,14 @@
       </div>
     </div>
     <div class="col-md-3">
-      <div class="stats-card text-center">
-        <h3><%= @events.where("date >= ?", Date.current).count %></h3>
+      <div class="stats-card text-center future-events-stats">
+        <h3><%= @future_events.count %></h3>
         <p class="mb-0">Eventos Futuros</p>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="stats-card text-center">
-        <h3><%= @events.where("date < ?", Date.current).count %></h3>
+      <div class="stats-card text-center past-events-stats">
+        <h3><%= @past_events.count %></h3>
         <p class="mb-0">Eventos Pasados</p>
       </div>
     </div>
@@ -72,16 +72,25 @@
     </div>
   <% end %>
 
-  <!-- Lista de eventos -->
-  <% if @events.any? %>
-    <div class="row">
-      <% @events.each do |event| %>
+  <!-- Eventos Futuros -->
+  <% if @future_events.any? %>
+    <div class="section-header mb-4">
+      <h2 class="section-title">
+        <i class="bi bi-calendar-plus text-success"></i>
+        Eventos Futuros
+        <span class="badge bg-success ms-2"><%= @future_events.count %></span>
+      </h2>
+      <p class="section-subtitle text-muted">Eventos que aún no han pasado y pueden ser editados</p>
+    </div>
+    
+    <div class="row mb-5">
+      <% @future_events.each do |event| %>
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="card event-card h-100">
+          <div class="card event-card h-100 future-event">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-3">
                 <h5 class="card-title mb-0"><%= event.name %></h5>
-                <span class="badge bg-primary event-type-badge">
+                <span class="badge bg-success event-type-badge">
                   <%= event.event_type %>
                 </span>
               </div>
@@ -118,7 +127,7 @@
                 <%= link_to event_path(event), class: "btn btn-outline-primary btn-sm" do %>
                   <i class="bi bi-eye"></i> Ver Detalles
                 <% end %>
-                <%= link_to edit_event_path(event), class: "btn btn-outline-secondary btn-sm" do %>
+                <%= link_to edit_event_path(event), class: "btn btn-outline-success btn-sm" do %>
                   <i class="bi bi-pencil"></i> Editar
                 <% end %>
               </div>
@@ -127,7 +136,76 @@
         </div>
       <% end %>
     </div>
-  <% else %>
+  <% end %>
+
+  <!-- Eventos Pasados -->
+  <% if @past_events.any? %>
+    <div class="section-header mb-4">
+      <h2 class="section-title">
+        <i class="bi bi-calendar-check text-secondary"></i>
+        Eventos Pasados
+        <span class="badge bg-secondary ms-2"><%= @past_events.count %></span>
+      </h2>
+      <p class="section-subtitle text-muted">Eventos que ya han pasado y no pueden ser editados</p>
+    </div>
+    
+    <div class="row">
+      <% @past_events.each do |event| %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card event-card h-100 past-event">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0"><%= event.name %></h5>
+                <span class="badge bg-secondary event-type-badge">
+                  <%= event.event_type %>
+                </span>
+              </div>
+              
+              <div class="mb-3">
+                <p class="text-muted mb-2">
+                  <i class="bi bi-calendar-date"></i> 
+                  <%= event.date.strftime("%d/%m/%Y") %>
+                </p>
+                <% if event.campaign_id.present? %>
+                  <p class="text-muted mb-2">
+                    <i class="bi bi-tag"></i> 
+                    Campaña: <%= event.campaign_id %>
+                  </p>
+                <% end %>
+              </div>
+              
+              <div class="row text-center mb-3">
+                <div class="col-4">
+                  <small class="text-muted">Postulantes</small>
+                  <div class="fw-bold"><%= event.total_applicants %></div>
+                </div>
+                <div class="col-4">
+                  <small class="text-muted">Confirmados</small>
+                  <div class="fw-bold text-success"><%= event.confirmed_attendances %></div>
+                </div>
+                <div class="col-4">
+                  <small class="text-muted">Asistencia</small>
+                  <div class="fw-bold text-primary"><%= event.attendance_rate %>%</div>
+                </div>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <%= link_to event_path(event), class: "btn btn-outline-primary btn-sm" do %>
+                  <i class="bi bi-eye"></i> Ver Detalles
+                <% end %>
+                <button class="btn btn-outline-secondary btn-sm" disabled title="No se puede editar un evento que ya ha pasado">
+                  <i class="bi bi-pencil"></i> Editar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Mensaje cuando no hay eventos -->
+  <% if @events.empty? %>
     <div class="text-center py-5">
       <i class="bi bi-calendar-x display-1 text-muted"></i>
       <h3 class="text-muted mt-3">
@@ -234,6 +312,75 @@
   color: #546e7a;
 }
 
+.future-events-stats {
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%) !important;
+  border-color: #c8e6c9 !important;
+  color: #2e7d32 !important;
+}
+
+.future-events-stats h3 {
+  color: #2e7d32 !important;
+}
+
+.past-events-stats {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%) !important;
+  border-color: #e0e0e0 !important;
+  color: #616161 !important;
+}
+
+.past-events-stats h3 {
+  color: #616161 !important;
+}
+
+.section-header {
+  border-bottom: 2px solid #e3f2fd;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  color: #1565c0;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+.future-event {
+  border-color: #c8e6c9 !important;
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.08) !important;
+}
+
+.future-event:hover {
+  border-color: #4caf50 !important;
+  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.15) !important;
+}
+
+.past-event {
+  border-color: #e0e0e0 !important;
+  box-shadow: 0 4px 16px rgba(97, 97, 97, 0.08) !important;
+  opacity: 0.8;
+}
+
+.past-event:hover {
+  border-color: #9e9e9e !important;
+  box-shadow: 0 8px 25px rgba(97, 97, 97, 0.15) !important;
+  opacity: 1;
+}
+
+.past-event .card-title {
+  color: #616161 !important;
+}
+
+.past-event .event-type-badge {
+  background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%) !important;
+}
+
 .btn-success {
   background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
   border: none;
@@ -312,6 +459,22 @@
   border-color: #6c757d;
   color: white;
   transform: translateY(-1px);
+}
+
+.btn-outline-secondary:disabled {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-outline-secondary:disabled:hover {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+  color: #6c757d;
+  transform: none;
+  box-shadow: none;
 }
 
 .text-primary {

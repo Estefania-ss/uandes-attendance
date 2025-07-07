@@ -2,6 +2,7 @@ class EventsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_event, only: [ :show, :update, :destroy ]
   before_action :require_admision!, only: [ :create, :update, :destroy ]
+  before_action :check_event_editable!, only: [ :update, :destroy ]
 
   def index
     @events = Event.all
@@ -14,6 +15,10 @@ class EventsController < ApplicationController
 
     # Ordenamiento
     @events = @events.order(date: :desc)
+
+    # Separar eventos en pasados y futuros
+    @past_events = @events.where("date < ?", Date.current).order(date: :desc)
+    @future_events = @events.where("date >= ?", Date.current).order(date: :asc)
 
     respond_to do |format|
       format.html
@@ -81,4 +86,18 @@ class EventsController < ApplicationController
   def event_params
     params.require(:event).permit(:name, :date, :event_type, :campaign_id)
   end
+
+  def check_event_editable!
+    unless @event.date >= Date.current
+      respond_to do |format|
+        format.html { redirect_to @event, alert: "No se puede editar un evento que ya ha pasado." }
+        format.json { render json: { error: "No se puede editar un evento que ya ha pasado." }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def event_editable?(event)
+    event.date >= Date.current
+  end
+  helper_method :event_editable?
 end
