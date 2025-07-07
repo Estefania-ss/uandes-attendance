@@ -1,8 +1,11 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_event, only: [ :show, :update, :destroy ]
   before_action :require_admision!, only: [ :create, :update, :destroy ]
+  before_action :set_event, only: [:show, :edit, :update, :destroy]
   before_action :check_event_editable!, only: [ :update, :destroy ]
+
+  
+
 
   def index
     @events = Event.all
@@ -72,18 +75,14 @@ class EventsController < ApplicationController
   end
 
   def update
+    check_event_editable! # <- ya tienes @event cargado por el before_action
     if @event.update(event_params)
-      respond_to do |format|
-        format.html { redirect_to @event, notice: "Evento actualizado exitosamente." }
-        format.json { render json: @event }
-      end
+      redirect_to @event, notice: 'Evento actualizado exitosamente.'
     else
-      respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
+      render :edit
     end
   end
+  
 
   def destroy
     @event.destroy
@@ -98,7 +97,8 @@ class EventsController < ApplicationController
   end
 
   def edit
-  end
+    @event
+  end  
 
   private
 
@@ -111,9 +111,9 @@ class EventsController < ApplicationController
   end
 
   def check_event_editable!
-    unless @event.date >= Date.current
+    unless @event && @event.date >= Date.current
       respond_to do |format|
-        format.html { redirect_to @event, alert: "No se puede editar un evento que ya ha pasado." }
+        format.html { redirect_to @event || events_path, alert: "No se puede editar un evento que ya ha pasado." }
         format.json { render json: { error: "No se puede editar un evento que ya ha pasado." }, status: :unprocessable_entity }
       end
     end
