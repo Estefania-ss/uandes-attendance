@@ -1,0 +1,347 @@
+,Carrera,carrera_id
+0,-biotegnología,0
+1,.,1
+2,actuación,2
+3,actuación teatral,3
+4,administracion de servicios,4
+5,administración,5
+6,administración de empresas,6
+7,administración de hotelería y turismo,7
+8,administración de servicios,8
+9,administración pública,9
+10,admistración de empresas,10
+11,agonomía,11
+12,agronomia,12
+13,agronomía,13
+14,animación digital,14
+15,antropología,15
+16,arqueología,16
+17,arqueólogo,17
+18,arquitectura,18
+19,arte,19
+20,artes,20
+21,artes escénicas,21
+22,artes teatrales,22
+23,artes visuales,23
+24,asistente social,24
+25,astrofísica,25
+26,astronomia,26
+27,astronomía,27
+28,auditoria,28
+29,aviación,29
+30,azafata,30
+31,bach en salud,31
+32,bachillerato,32
+33,bachillerato de comercial,33
+34,bachillerato de derecho,34
+35,bachillerato de enfermeria,35
+36,bachillerato de enfermería,36
+37,bachillerato de humanidades,37
+38,bachillerato de ingenieria civil,38
+39,bachillerato de ingeniería civil,39
+40,bachillerato de ingeniería comercial,40
+41,bachillerato de ingerniería civil,41
+42,bachillerato de medicina,42
+43,bachillerato de obstetricia y puericultura,43
+44,bachillerato de odontologia,44
+45,bachillerato de odontología,45
+46,bachillerato de psicología,46
+47,bachillerato de salud,47
+48,bachillerato en ciencias sociales,48
+49,bachillerato en derecho,49
+50,bachillerato en humanidades,50
+51,bachillerato en ingeniería comercial,51
+52,bachillerato en medicina,52
+53,bachillerato en obstetricia,53
+54,bachillerato en odontología,54
+55,bachillerato en psciología,55
+56,bachillerato en salud,56
+57,bachillerato ingeniería,57
+58,bachillerato psicologia,58
+59,bachillerato salud,59
+60,bachilllerato de ingeniería civil,60
+61,bioingeniería,61
+62,biología,62
+63,biología marina,63
+64,biología terrestre,64
+65,bioquimica,65
+66,bioquímica,66
+67,biotecnología,67
+68,ciencia,68
+69,ciencias,69
+70,ciencias ambientales,70
+71,ciencias politicas,71
+72,ciencias políticas,72
+73,ciencias sociales,73
+74,científicas,74
+75,cine,75
+76,civil,76
+77,collage,77
+78,college,78
+79,college uc,79
+80,comercio,80
+81,computer science,81
+82,comunicacion audiovisual,82
+83,comunicación audiovisual,83
+84,construcción,84
+85,construcción civil,85
+86,contabilidad,86
+87,contador auditor,87
+88,cosmetología,88
+89,criminalista,89
+90,criminalística,90
+91,criminología,91
+92,cs politicas,92
+93,data business intelligence,93
+94,deporte,94
+95,deportes,95
+96,derecho,96
+97,derecho e historia,97
+98,derecho e historia nueva,98
+99,derecho y filosofía,99
+100,dibujante proyectista,100
+101,dirección,101
+102,diseño,102
+103,diseño de moda,103
+104,diseño de vestuario,104
+105,diseño gráfico,105
+106,doble licenciatura en derecho y filosofía,106
+107,doble licenciatura en derecho y filosofía - nueva,107
+108,economia,108
+109,economía,109
+110,ecoturismo,110
+111,eduación de párvulo con menciones,111
+112,educacion de parvulos,112
+113,educación básica con menciones,113
+114,educación de parvulos,114
+115,educación de párvulo,115
+116,educación de párvulo con menciones,116
+117,educación de párvulos,117
+118,educación diferencial,118
+119,electricidad,119
+120,electrónica,120
+121,empresariales,121
+122,enfermeria,122
+123,enfermería,123
+124,enologia,124
+125,escuela naval,125
+126,estadistica,126
+127,estadísticas,127
+128,estudios internacionales,128
+129,estética y cosmetología,129
+130,farmacéutica,130
+131,ff aa,131
+132,ffaa,132
+133,filosofia,133
+134,filosofía,134
+135,fonoaudiología,135
+136,fotografía,136
+137,futbolista,137
+138,física,138
+139,gastronomía,139
+140,geología,140
+141,global business administration,141
+142,historia,142
+143,historia del arte,143
+144,hoteleria y turismo,144
+145,hotelería y turismo,145
+146,humanidades,146
+147,idiomas,147
+148,ilustracion,148
+149,informatica,149
+150,informática,150
+151,ing civil,151
+152,ing. comercial,152
+153,ing. en mat,153
+154,ing. recursos naturales,154
+155,ingenería civil plan común,155
+156,ingenería comercial,156
+157,ingenieria,157
+158,ingenieria civil,158
+159,ingenieria civil ambiental,159
+160,ingenieria civil en biotecnología,160
+161,ingenieria civil en ciencias de la computacion,161
+162,ingenieria civil en ciencias de la computación,162
+163,ingenieria civil en físca,163
+164,ingenieria civil en matematicas,164
+165,ingenieria civil en minas,165
+166,ingenieria civil industrial,166
+167,ingenieria civil informatica,167
+168,ingenieria comercial,168
+169,ingenieria en ciberseguridad,169
+170,ingeniería,170
+171,ingeniería agronómica,171
+172,ingeniería agrónoma,172
+173,ingeniería astroespacial,173
+174,ingeniería automotriz,174
+175,ingeniería biomédica,175
+176,ingeniería biotecnología,176
+177,ingeniería civil,177
+178,ingeniería civil (plan común),178
+179,ingeniería civil ambiental,179
+180,ingeniería civil biomédica,180
+181,ingeniería civil electrónica,181
+182,ingeniería civil eléctrica,182
+183,ingeniería civil en ciencias de la computación,183
+184,ingeniería civil en informática,184
+185,ingeniería civil en minas,185
+186,ingeniería civil en obras civil,186
+187,ingeniería civil en obras civiles,187
+188,ingeniería civil física,188
+189,ingeniería civil industeial,189
+190,ingeniería civil industrial,190
+191,ingeniería civil informática,191
+192,ingeniería civil mecánica,192
+193,ingeniería civil minas,193
+194,ingeniería civil química,194
+195,ingeniería civil robotica,195
+196,ingeniería comercial,196
+197,ingeniería electrónica,197
+198,ingeniería eléctrica,198
+199,ingeniería en biotecnología,199
+200,ingeniería en biotecnología molecular,200
+201,ingeniería en biotecnología vegetal,201
+202,ingeniería en comercio internacional,202
+203,ingeniería en diseño,203
+204,ingeniería en gestión financiera,204
+205,ingeniería en informática,205
+206,ingeniería en mecánica,206
+207,ingeniería en minas,207
+208,ingeniería en realidad virtual,208
+209,ingeniería en recursos naturales,209
+210,ingeniería en recursos renovables,210
+211,ingeniería en tecnología y negociación,211
+212,ingeniería en telecomunicaciones,212
+213,ingeniería física,213
+214,ingeniería industrial,214
+215,ingeniería informática,215
+216,ingeniería matemática,216
+217,ingeniería mecánica,217
+218,ingeniería plan comun,218
+219,ingeniería plan común,219
+220,ingeniería química,220
+221,ingenierías,221
+222,ingerniería comercial,222
+223,inmunología,223
+224,internationa business,224
+225,international business,225
+226,international bussines,226
+227,interpretación músical,227
+228,interprete - idiomas,228
+229,kinesiolgía,229
+230,kinesiologia,230
+231,kinesiología,231
+232,kinesología,232
+233,letras hispánicas,233
+234,licenciatura,234
+235,licenciatura derecho filosofia,235
+236,licenciatura en escritura creativa y literatura,236
+237,licenciatura en historia,237
+238,lingüística,238
+239,literatura,239
+240,literatura creativa,240
+241,literatura en biología,241
+242,logística,242
+243,marketing,243
+244,matemáticas,244
+245,mecatrónica,245
+246,mecánica,246
+247,medicina,247
+248,medicina veterinaria,248
+249,medicinaveterinaria,249
+250,minería,250
+251,moda,251
+252,musica,252
+253,música,253
+254,negocios internacionales,254
+255,no se especifica,255
+256,nutición y dietética,256
+257,nutricion y dietetica,257
+258,nutrición,258
+259,nutrición y dietetica,259
+260,nutrición y dietética,260
+261,nutrición y ditetica,261
+262,obstetricia,262
+263,obstetricia y puericulta,263
+264,obstetricia y puericultura,264
+265,obstetricia/ tecnología médica,265
+266,obstetrícia,266
+267,obstetrícia y puericultura,267
+268,obstettricia y puericultura,268
+269,obtetricia y puericultura,269
+270,odontologia,270
+271,odontología,271
+272,odontólogo y piloto,272
+273,oficial de ejército,273
+274,ostetricia y puericultura,274
+275,other1,275
+276,other2,276
+277,otra,277
+278,otra carrera,278
+279,otro,279
+280,otros,280
+281,paisajismo,281
+282,pdi,282
+283,pedagogia basica,283
+284,pedagogia basica bilingue ingles / español,284
+285,pedagogia básica,285
+286,pedagogia media en biologia,286
+287,pedagogia media en fisica,287
+288,pedagogía,288
+289,pedagogía basica bilingüe,289
+290,pedagogía básica,290
+291,pedagogía básica bilingüe inglés / español,291
+292,pedagogía básica bilingüe inglés/ español,292
+293,pedagogía básica bilingüe inglés/español,293
+294,pedagogía en educación fisica,294
+295,pedagogía en educación física,295
+296,pedagogía en educación parvularia,296
+297,pedagogía en lengua castellana y comunicación,297
+298,pedagogía en lenguaje y comunicación,298
+299,pedagogía en matemática y computación,299
+300,pedagogía en matemáticas,300
+301,pedagogía media,301
+302,pedagogía media en lenguaje,302
+303,pediatría,303
+304,pedágogía básica bilingüe,304
+305,pegagogía básica con menciones,305
+306,periodismo,306
+307,preparador físico,307
+308,prevención de riesgos,308
+309,programación y base de datos,309
+310,psicologia,310
+311,psicologia/ college sociales,311
+312,psicología,312
+313,psicopedagogía,313
+314,psiquiatría,314
+315,psu química,315
+316,publicidad,316
+317,quimica farmacia,317
+318,quimica y farmacia,318
+319,química,319
+320,química farmaceutica,320
+321,química farmaceútica,321
+322,química industrial,322
+323,química y farmaceútica,323
+324,química y farmacia,324
+325,química y farmacéutica,325
+326,química/farmacia,326
+327,relaciones públicas,327
+328,salud,328
+329,sin especificar,329
+330,sociología,330
+331,teatro,331
+332,tecnología,332
+333,tecnología medica,333
+334,tecnología médica,334
+335,terapia ocupacinal,335
+336,terapia ocupacional,336
+337,textil,337
+338,trabajo social,338
+339,traduccción e interpretación bilingüe,339
+340,traducción en idiomas extranjeros,340
+341,traducción-idiomas,341
+342,turismo,342
+343,técnicos profesionales,343
+344,urología,344
+345,veterinaria,345
