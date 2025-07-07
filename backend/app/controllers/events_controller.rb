@@ -53,6 +53,9 @@ class EventsController < ApplicationController
     @selected_school = selected_school
     @selected_career = selected_career
 
+    # Nueva variable: solo asistencias de postulantes filtrados
+    @filtered_attendances = @event.attendances.includes(:applicant).where(applicant_id: applicants.select(:id))
+
     respond_to do |format|
       format.html
       format.json { render json: @event }

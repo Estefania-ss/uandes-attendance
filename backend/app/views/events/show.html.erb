@@ -123,35 +123,32 @@
               </h5>
             </div>
             <div class="card-body">
-              <% if @event.attendances.any? %>
+              <% if @filtered_attendances.any? %>
                 <div class="table-responsive">
                   <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>Postulante</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
                         <th>Estado</th>
                         <th>Fecha de Registro</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @event.attendances.includes(:applicant).each do |attendance| %>
+                      <% @filtered_attendances.each do |attendance| %>
                         <tr>
                           <td>
                             <strong><%= attendance.applicant&.name || 'N/A' %></strong>
-                            <br>
+                          </td>
+                          <td>
                             <small class="text-muted"><%= attendance.applicant&.email || 'N/A' %></small>
                           </td>
                           <td>
-                            <% case attendance.status %>
-                            <% when 'confirmado' %>
-                              <span class="badge bg-success">Confirmado</span>
-                            <% when 'pendiente' %>
-                              <span class="badge bg-warning">Pendiente</span>
-                            <% when 'cancelado' %>
-                              <span class="badge bg-danger">Cancelado</span>
-                            <% else %>
-                              <span class="badge bg-secondary"><%= attendance.status %></span>
-                            <% end %>
+                            <small class="text-muted"><%= attendance.applicant&.phone || 'N/A' %></small>
+                          </td>
+                          <td>
+                            <%= button_to attendance.status == 'confirmado' ? 'Confirmado' : 'No confirmado', toggle_status_attendance_path(attendance), method: :patch, class: attendance.status == 'confirmado' ? 'btn btn-success btn-sm' : 'btn btn-outline-secondary btn-sm', form: { data: { turbo_confirm: '¿Estás seguro de cambiar el estado de asistencia?' } } %>
                           </td>
                           <td>
                             <small class="text-muted">
@@ -167,44 +164,6 @@
                 <div class="text-center py-4">
                   <i class="bi bi-people display-4 text-muted"></i>
                   <p class="text-muted mt-3">No hay asistencias registradas para este evento</p>
-                </div>
-              <% end %>
-            </div>
-          </div>
-          <!-- Lista de asistentes confirmados reales -->
-          <div class="card mt-4">
-            <div class="card-header">
-              <h5 class="mb-0">
-                <i class="bi bi-check-circle"></i> Asistentes Confirmados (Efectivos)
-              </h5>
-            </div>
-            <div class="card-body">
-              <% real_confirmed = @event.attendances.includes(:applicant).where(real_status: 'confirmado') %>
-              <% if real_confirmed.any? %>
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Postulante</th>
-                        <th>Correo</th>
-                        <th>Fecha de Confirmación</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% real_confirmed.each do |attendance| %>
-                        <tr>
-                          <td><strong><%= attendance.applicant&.name || 'N/A' %></strong></td>
-                          <td><%= attendance.applicant&.email || 'N/A' %></td>
-                          <td><small class="text-muted"><%= attendance.updated_at.strftime("%d/%m/%Y %H:%M") %></small></td>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
-                </div>
-              <% else %>
-                <div class="text-center py-2">
-                  <i class="bi bi-person-x display-6 text-muted"></i>
-                  <p class="text-muted mt-2">No hay asistentes confirmados efectivos para este evento</p>
                 </div>
               <% end %>
             </div>
