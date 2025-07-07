@@ -1,0 +1,205 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-container">
+        <i class="bi bi-calendar-event"></i>
+      </div>
+      <h1>Sistema de Asistencia UANDES</h1>
+      <p class="text-muted">Inicia sesión para continuar</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "login-form" }) do |f| %>
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-envelope"></i>
+          </span>
+          <%= f.email_field :email, 
+              autofocus: true, 
+              autocomplete: "email", 
+              class: "form-control",
+              placeholder: "Correo electrónico" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-lock"></i>
+          </span>
+          <%= f.password_field :password, 
+              autocomplete: "current-password", 
+              class: "form-control",
+              placeholder: "Contraseña" %>
+        </div>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="form-check mb-3">
+          <%= f.check_box :remember_me, class: "form-check-input" %>
+          <%= f.label :remember_me, "Recordarme", class: "form-check-label" %>
+        </div>
+      <% end %>
+
+      <div class="d-grid">
+        <%= f.submit "Iniciar Sesión", class: "btn btn-primary btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(33, 150, 243, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp 0.6s ease-out;
+  border: 1px solid #e3f2fd;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-container {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.logo-container i {
+  font-size: 1.8rem;
+  color: white;
+}
+
+.login-header h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1565c0;
+  margin-bottom: 8px;
+}
+
+.login-header p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #546e7a;
+}
+
+.login-form .form-group {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e3f2fd;
+  transition: all 0.3s ease;
+}
+
+.input-group:focus-within {
+  border-color: #2196f3;
+  box-shadow: 0 2px 12px rgba(33, 150, 243, 0.15);
+}
+
+.input-group-text {
+  background: #f5f9ff;
+  border: none;
+  color: #1976d2;
+  padding: 12px 15px;
+}
+
+.form-control {
+  border: none;
+  padding: 12px 15px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  background-color: #fff;
+}
+
+.form-control::placeholder {
+  color: #90a4ae;
+}
+
+.form-check-input:checked {
+  background-color: #1976d2;
+  border-color: #1976d2;
+}
+
+.form-check-label {
+  color: #546e7a;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+  
+  .logo-container {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-container i {
+    font-size: 1.5rem;
+  }
+  
+  .login-header h1 {
+    font-size: 1.2rem;
+  }
+}
+</style>
