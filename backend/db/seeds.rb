@@ -84,6 +84,3 @@ end
 puts "Eventos de prueba creados:"
 puts "- 3 eventos pasados (no editables)"
 puts "- 4 eventos futuros (editables)"
-
-
-# 
