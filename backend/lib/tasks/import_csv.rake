@@ -13,12 +13,14 @@ namespace :csv do
     
     total_eventos_creados = 0
     total_postulantes_creados = 0
+    total_asistencias_creadas = 0
     total_errores = 0
     
     csv_files.each do |csv_path|
       puts "\nProcesando archivo: #{File.basename(csv_path)}"
       eventos_creados = 0
       postulantes_creados = 0
+      asistencias_creadas = 0
       errores = 0
       
       CSV.foreach(csv_path, headers: true, encoding: 'UTF-8') do |row|
@@ -32,7 +34,6 @@ namespace :csv do
             else 'Otro'
           end
 
-          # Crear el evento solo si no existe
           existing_event = Event.find_by(campaign_id: row['Id. de campaña'])
           if existing_event
             event = existing_event
@@ -41,13 +42,12 @@ namespace :csv do
               name: nombre,
               event_type: tipo_evento,
               campaign_id: row['Id. de campaña'],
-              date: Date.today # o la fecha que corresponda
+              date: Date.today
             )
             eventos_creados += 1
-            puts "✅ Evento creado: #{event.name} (#{event.event_type})"
+            puts "Evento creado: #{event.name} (#{event.event_type})"
           end
           
-          # Crear o encontrar el postulante
           applicant = Applicant.find_or_create_by!(rut: row['Rut']) do |a|
             a.name = row['Nombre']
             a.last_name = row['Apellidos']
@@ -60,13 +60,22 @@ namespace :csv do
             a.graduation_status = row['Egreso']
             a.phone = row['Móvil']
             a.region = row['Zona Región']
-            a.comuna = 'Por definir' # Campo requerido pero no en CSV
+            a.comuna = 'Por definir' 
           end
-          
           postulantes_creados += 1 if applicant.created_at == applicant.updated_at
-          
+
+          attended = row['Asistió'].to_s.strip.downcase.in?(['1', 'true', 'sí', 'si'])
+          status_value = attended ? "si" : "no"
+          attendance = Attendance.find_or_create_by!(
+            applicant: applicant,
+            event: event
+          ) do |att|
+            att.status = status_value
+          end
+          asistencias_creadas += 1 if attendance.created_at == attendance.updated_at
+
         rescue => e
-          puts "❌ Error procesando fila: #{e.message}"
+          puts "Error procesando fila: #{e.message}"
           puts "   Datos: #{row.to_h}"
           errores += 1
         end
@@ -75,18 +84,22 @@ namespace :csv do
       puts "\nResumen archivo #{File.basename(csv_path)}:"
       puts "   Eventos creados: #{eventos_creados}"
       puts "   Postulantes creados: #{postulantes_creados}"
+      puts "   Asistencias creadas: #{asistencias_creadas}"
       puts "   Errores: #{errores}"
       total_eventos_creados += eventos_creados
       total_postulantes_creados += postulantes_creados
+      total_asistencias_creadas += asistencias_creadas
       total_errores += errores
     end
     
     puts "\nResumen total de importación:"
     puts "   Eventos creados: #{total_eventos_creados}"
     puts "   Postulantes creados: #{total_postulantes_creados}"
+    puts "   Asistencias creadas: #{total_asistencias_creadas}"
     puts "   Errores: #{total_errores}"
     puts "   Total de eventos en BD: #{Event.count}"
     puts "   Total de postulantes en BD: #{Applicant.count}"
+    puts "   Total de asistencias en BD: #{Attendance.count}"
     
     puts "\nImportación completada!"
   end
