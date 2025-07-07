@@ -37,4 +37,11 @@ class Event < ApplicationRecord
       .reject(&:blank?)
       .uniq
   end
+
+  def predicted_attendance_rate
+    return 0 if attendances.empty?
+    total = attendances.where.not(predicted_status: nil).count
+    return 0 if total == 0
+    (100.0 * attendances.where(predicted_status: 1).count / total).round(1)
+  end
 end

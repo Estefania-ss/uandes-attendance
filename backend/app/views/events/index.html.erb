@@ -122,7 +122,7 @@
                   <small class="text-muted">Asistencia</small>
                   <div class="fw-bold text-primary">
                     <% if event.attendance_rate == 999 %>
-                      Predicción
+                      <%= event.predicted_attendance_rate %>%
                     <% else %>
                       <%= event.attendance_rate %>%
                     <% end %>
@@ -196,7 +196,7 @@
                   <small class="text-muted">Asistencia</small>
                   <div class="fw-bold text-primary">
                     <% if event.attendance_rate == 999 %>
-                      Predicción
+                      <%= event.predicted_attendance_rate %>%
                     <% else %>
                       <%= event.attendance_rate %>%
                     <% end %>
