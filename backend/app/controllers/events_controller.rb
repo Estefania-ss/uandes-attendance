@@ -1,10 +1,10 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admision!, only: [ :create, :update, :destroy ]
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [ :show, :edit, :update, :destroy ]
   before_action :check_event_editable!, only: [ :update, :destroy ]
 
-  
+
 
 
   def index
@@ -46,7 +46,7 @@ class EventsController < ApplicationController
     else
       (@filtered_confirmed_attendances.to_f / @filtered_total_applicants * 100).round(2)
     end
-    @filtered_pending = @event.attendances.where(applicant_id: applicants.select(:id), status: "pendiente").count
+    @filtered_pending = @filtered_total_applicants - @filtered_confirmed_attendances
 
     @schools = @event.schools
     @careers = @event.careers
@@ -77,12 +77,12 @@ class EventsController < ApplicationController
   def update
     check_event_editable! # <- ya tienes @event cargado por el before_action
     if @event.update(event_params)
-      redirect_to @event, notice: 'Evento actualizado exitosamente.'
+      redirect_to @event, notice: "Evento actualizado exitosamente."
     else
       render :edit
     end
   end
-  
+
 
   def destroy
     @event.destroy
@@ -98,7 +98,7 @@ class EventsController < ApplicationController
 
   def edit
     @event
-  end  
+  end
 
   private
 

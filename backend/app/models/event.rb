@@ -21,7 +21,8 @@ class Event < ApplicationRecord
   def attendance_rate
     return 999 if date >= Date.current # Evento futuro: predicción
     return 0 if total_applicants.zero?
-    (confirmed_attendances.to_f / total_applicants * 100).round(2)
+    real_confirmed = attendances.where(real_status: "confirmado").count
+    (real_confirmed.to_f / total_applicants * 100).round(2)
   end
 
   def schools

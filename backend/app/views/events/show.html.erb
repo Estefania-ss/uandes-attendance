@@ -171,6 +171,44 @@
               <% end %>
             </div>
           </div>
+          <!-- Lista de asistentes confirmados reales -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-check-circle"></i> Asistentes Confirmados (Efectivos)
+              </h5>
+            </div>
+            <div class="card-body">
+              <% real_confirmed = @event.attendances.includes(:applicant).where(real_status: 'confirmado') %>
+              <% if real_confirmed.any? %>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Postulante</th>
+                        <th>Correo</th>
+                        <th>Fecha de Confirmación</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% real_confirmed.each do |attendance| %>
+                        <tr>
+                          <td><strong><%= attendance.applicant&.name || 'N/A' %></strong></td>
+                          <td><%= attendance.applicant&.email || 'N/A' %></td>
+                          <td><small class="text-muted"><%= attendance.updated_at.strftime("%d/%m/%Y %H:%M") %></small></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <div class="text-center py-2">
+                  <i class="bi bi-person-x display-6 text-muted"></i>
+                  <p class="text-muted mt-2">No hay asistentes confirmados efectivos para este evento</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
         </div>
 
         <div class="col-md-4">
@@ -203,28 +241,6 @@
                 <dt class="col-sm-6">Actualizado:</dt>
                 <dd class="col-sm-6"><%= @event.updated_at.strftime("%d/%m/%Y") %></dd>
               </dl>
-            </div>
-          </div>
-
-          <!-- Acciones rápidas -->
-          <div class="card">
-            <div class="card-header">
-              <h6 class="mb-0">
-                <i class="bi bi-lightning"></i> Acciones Rápidas
-              </h6>
-            </div>
-            <div class="card-body">
-              <div class="d-grid gap-2">
-                <%= link_to new_attendance_path(event_id: @event.id), class: "btn btn-success btn-sm" do %>
-                  <i class="bi bi-plus-circle"></i> Agregar Asistencia
-                <% end %>
-                <%= link_to attendances_path(event_id: @event.id), class: "btn btn-info btn-sm" do %>
-                  <i class="bi bi-list-check"></i> Ver Todas las Asistencias
-                <% end %>
-                <%= link_to "#", class: "btn btn-warning btn-sm" do %>
-                  <i class="bi bi-download"></i> Exportar Datos
-                <% end %>
-              </div>
             </div>
           </div>
         </div>
