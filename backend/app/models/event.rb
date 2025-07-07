@@ -15,11 +15,24 @@ class Event < ApplicationRecord
   end
 
   def confirmed_attendances
-    attendances.where(status: 'confirmado').count
+    attendances.where(status: "confirmado").count
   end
 
   def attendance_rate
     return 0 if total_applicants.zero?
     (confirmed_attendances.to_f / total_applicants * 100).round(2)
+  end
+
+  def schools
+    applicants.where.not(school: [ nil, "" ]).distinct.pluck(:school)
+  end
+
+  def careers
+    applicants
+      .pluck(:career_interest, :career_interest_2)
+      .flatten
+      .compact
+      .reject(&:blank?)
+      .uniq
   end
 end

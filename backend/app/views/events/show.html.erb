@@ -9,6 +9,24 @@
         </ol>
       </nav>
 
+      <!-- Filtro de estadísticas -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <%= form_with url: event_path(@event), method: :get, local: true, class: "row g-2 align-items-end" do |f| %>
+            <div class="col-md-4">
+              <%= f.label :school, "Filtrar por colegio (opcional)", class: "form-label" %>
+              <%= f.select :school, options_for_select([['Todos', '']] + @schools.map { |s| [s, s] }, @selected_school), {}, class: "form-select" %>
+            </div>
+            <div class="col-md-4">
+              <%= f.label :career, "Filtrar por carrera (opcional)", class: "form-label" %>
+              <%= f.select :career, options_for_select([['Todas', '']] + @careers.map { |c| [c, c] }, @selected_career), {}, class: "form-select" %>
+            </div>
+            <div class="col-md-2">
+              <%= f.submit "Filtrar", class: "btn btn-primary w-100" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
       <!-- Header del evento -->
       <div class="card mb-4">
         <div class="card-body">
@@ -63,7 +81,7 @@
         <div class="col-md-3">
           <div class="card text-center border-primary">
             <div class="card-body">
-              <h3 class="text-primary"><%= @event.total_applicants %></h3>
+              <h3 class="text-primary"><%= @filtered_total_applicants %></h3>
               <p class="card-text">Total Postulantes</p>
             </div>
           </div>
@@ -71,7 +89,7 @@
         <div class="col-md-3">
           <div class="card text-center border-success">
             <div class="card-body">
-              <h3 class="text-success"><%= @event.confirmed_attendances %></h3>
+              <h3 class="text-success"><%= @filtered_confirmed_attendances %></h3>
               <p class="card-text">Asistencias Confirmadas</p>
             </div>
           </div>
@@ -79,7 +97,7 @@
         <div class="col-md-3">
           <div class="card text-center border-info">
             <div class="card-body">
-              <h3 class="text-info"><%= @event.attendance_rate %>%</h3>
+              <h3 class="text-info"><%= @filtered_attendance_rate %>%</h3>
               <p class="card-text">Tasa de Asistencia</p>
             </div>
           </div>
@@ -87,7 +105,7 @@
         <div class="col-md-3">
           <div class="card text-center border-warning">
             <div class="card-body">
-              <h3 class="text-warning"><%= @event.attendances.where(status: 'pendiente').count %></h3>
+              <h3 class="text-warning"><%= @filtered_pending %></h3>
               <p class="card-text">Pendientes</p>
             </div>
           </div>

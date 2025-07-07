@@ -1,4 +1,22 @@
 class AttendancesController < ApplicationController
+  protect_from_forgery with: :null_session  
+
+  def verify
+    rut = params[:rut]
+    found = Applicant.exists?(rut: rut)  
+    render json: { found: found }
+  end
+
+  def mark
+    applicant = Applicant.find_by(rut: params[:rut])
+    if applicant
+      applicant.update(attended: true) 
+      redirect_to events_path, notice: "Asistencia confirmada para #{applicant.name}"
+    else
+      redirect_to events_path, alert: "El postulante no está en la lista"
+    end
+  end
+
   def index
   end
 

@@ -27,6 +27,29 @@ class EventsController < ApplicationController
   end
 
   def show
+    selected_school = params[:school].presence
+    selected_career = params[:career].presence
+
+    applicants = @event.applicants
+    applicants = applicants.where(school: selected_school) if selected_school.present?
+    if selected_career.present?
+      applicants = applicants.where("career_interest = ? OR career_interest_2 = ?", selected_career, selected_career)
+    end
+
+    @filtered_total_applicants = applicants.count
+    @filtered_confirmed_attendances = @event.attendances.where(applicant_id: applicants.select(:id), status: "confirmado").count
+    @filtered_attendance_rate = if @filtered_total_applicants.zero?
+      0
+    else
+      (@filtered_confirmed_attendances.to_f / @filtered_total_applicants * 100).round(2)
+    end
+    @filtered_pending = @event.attendances.where(applicant_id: applicants.select(:id), status: "pendiente").count
+
+    @schools = @event.schools
+    @careers = @event.careers
+    @selected_school = selected_school
+    @selected_career = selected_career
+
     respond_to do |format|
       format.html
       format.json { render json: @event }

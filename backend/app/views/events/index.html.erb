@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/html5-qrcode"></script>
 <div class="search-container">
   <div class="container">
     <div class="row justify-content-center">
@@ -63,7 +64,7 @@
       <% end %>
     </div>
   </div>
-
+  
   <!-- Resultados de búsqueda -->
   <% if params[:search].present? %>
     <div class="alert alert-info">
@@ -130,6 +131,8 @@
                 <%= link_to edit_event_path(event), class: "btn btn-outline-success btn-sm" do %>
                   <i class="bi bi-pencil"></i> Editar
                 <% end %>
+                <%= button_tag "Leer QR", class: "btn btn-outline-dark btn-sm", data: { bs_toggle: "modal", bs_target: "#qrModal" } %>
+
               </div>
             </div>
           </div>
@@ -521,3 +524,100 @@
     }
   });
 </script> 
+
+<!-- Modal para leer QR -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qrModalLabel">Escanear cédula de identidad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div id="qr-reader" style="width: 100%; max-width: 500px; margin: auto;"></div>
+        <div id="qr-result" class="mt-3 text-start"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let qrScanner;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const qrModal = document.getElementById("qrModal");
+    qrModal.addEventListener("shown.bs.modal", function () {
+      if (!qrScanner) {
+        qrScanner = new Html5Qrcode("qr-reader");
+
+        Html5Qrcode.getCameras().then(cameras => {
+          if (cameras && cameras.length) {
+            const cameraId = cameras[0].id;
+
+            qrScanner.start(
+              cameraId,
+              {
+                fps: 10,
+                qrbox: 250
+              },
+              onScanSuccess,
+              onScanError
+            );
+          }
+        }).catch(err => {
+          document.getElementById("qr-result").innerText = "Error al acceder a la cámara: " + err;
+        });
+      }
+    });
+
+    qrModal.addEventListener("hidden.bs.modal", function () {
+      if (qrScanner) {
+        qrScanner.stop().then(() => {
+          qrScanner.clear();
+          qrScanner = null;
+          document.getElementById("qr-result").innerHTML = "";
+        });
+      }
+    });
+  });
+
+  function onScanSuccess(decodedText, decodedResult) {
+    document.getElementById("qr-result").innerHTML = `
+      <p><strong>QR leído:</strong> ${decodedText}</p>
+      <p>Verificando si está registrado...</p>
+    `;
+
+    // Extraer RUT del texto escaneado (adaptar si el formato es distinto)
+    const rut = decodedText.match(/\d{7,8}-[0-9kK]/);
+    if (!rut) {
+      document.getElementById("qr-result").innerHTML += `<p class="text-danger">No se encontró un RUT válido en el QR.</p>`;
+      return;
+    }
+
+    fetch(`/verify_attendance?rut=${rut[0]}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.found) {
+          document.getElementById("qr-result").innerHTML += `
+            <div class="alert alert-success mt-3">El postulante está registrado.</div>
+            <form method="POST" action="/mark_attendance">
+              <input type="hidden" name="rut" value="${rut[0]}" />
+              <button type="submit" class="btn btn-success me-2">Confirmar Asistencia</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </form>
+          `;
+        } else {
+          document.getElementById("qr-result").innerHTML += `
+            <div class="alert alert-danger mt-3">El postulante no está en la lista.</div>
+          `;
+        }
+      })
+      .catch(err => {
+        document.getElementById("qr-result").innerHTML += `<p class="text-danger">Error en la verificación: ${err}</p>`;
+      });
+  }
+
+  function onScanError(errorMessage) {
+    // Silenciar errores de escaneo, no mostrar nada
+  }
+</script>
