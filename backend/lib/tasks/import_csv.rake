@@ -11,6 +11,37 @@ namespace :csv do
       exit 1
     end
 
+    # Leer coordenadas de colegios
+    coords_path = Rails.root.join("db", "data", "df_coords.csv")
+    colegio_coords = {}
+    if File.exist?(coords_path)
+      CSV.foreach(coords_path, headers: true) do |row|
+        # Normalizar nombre de colegio (sin comuna, lowercase, sin espacios extras)
+        nombre = row["Colegio"].to_s.split("/").first.strip.downcase
+        lat = row["lat"].to_f
+        lon = row["lon"].to_f
+        colegio_coords[nombre] = [lat, lon]
+      end
+    else
+      puts "[WARNING] No se encontró df_coords.csv, se usarán 0.0 para lat/lon/distancia."
+    end
+
+    # Coordenadas UAndes
+    uandes_lat = -33.401993
+    uandes_lon = -70.567274
+
+    # Método para calcular distancia Haversine
+    def haversine(lat1, lon1, lat2, lon2)
+      rad_per_deg = Math::PI / 180
+      rkm = 6371 # Radio de la Tierra en km
+      dlat_rad = (lat2 - lat1) * rad_per_deg
+      dlon_rad = (lon2 - lon1) * rad_per_deg
+      lat1_rad, lat2_rad = lat1 * rad_per_deg, lat2 * rad_per_deg
+      a = Math.sin(dlat_rad / 2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad / 2)**2
+      c = 2 * Math::atan2(Math::sqrt(a), Math::sqrt(1 - a))
+      rkm * c
+    end
+
     total_eventos_creados = 0
     total_postulantes_creados = 0
     total_asistencias_creadas = 0
@@ -56,6 +87,7 @@ namespace :csv do
           existing_event = Event.find_by(campaign_id: row["Id. de campaña"])
           if existing_event
             event = existing_event
+            puts "[LOG] Evento encontrado: #{event.name} (ID: #{event.id})"
           else
             event = Event.create!(
               name: nombre,
@@ -64,7 +96,7 @@ namespace :csv do
               date: event_date
             )
             eventos_creados += 1
-            puts "Evento creado: #{event.name} (#{event.event_type})"
+            puts "[LOG] Evento creado: #{event.name} (#{event.event_type}) (ID: #{event.id})"
           end
 
           applicant = Applicant.find_or_create_by!(rut: row["Rut"]) do |a|
@@ -81,18 +113,38 @@ namespace :csv do
             a.region = row["Zona Región"]
             a.comuna = "Por definir"
           end
-          postulantes_creados += 1 if applicant.created_at == applicant.updated_at
+          if applicant.created_at == applicant.updated_at
+            postulantes_creados += 1
+            puts "[LOG] Applicant creado: #{applicant.name} #{applicant.last_name} (ID: #{applicant.id})"
+          else
+            puts "[LOG] Applicant encontrado: #{applicant.name} #{applicant.last_name} (ID: #{applicant.id})"
+          end
 
           attended = row["Asistió"].to_s.strip.downcase.in?([ "1", "true", "sí", "si" ])
           status_value = attended ? "confirmado" : "no_confirmado"
+          # Buscar coordenadas del colegio
+          colegio_nombre = row["Colegio"].to_s.split("/").first.strip.downcase
+          lat, lon = colegio_coords[colegio_nombre] || [0.0, 0.0]
+          distancia = lat != 0.0 && lon != 0.0 ? haversine(lat, lon, uandes_lat, uandes_lon) : 0.0
           attendance = Attendance.find_or_create_by!(
             applicant: applicant,
             event: event
           ) do |att|
             att.status = status_value
             att.real_status = status_value
+            # Pasar lat, lon, distancia reales al callback
+            att.define_singleton_method(:lat) { lat }
+            att.define_singleton_method(:lon) { lon }
+            att.define_singleton_method(:distancia) { distancia }
           end
-          asistencias_creadas += 1 if attendance.created_at == attendance.updated_at
+          if attendance.created_at == attendance.updated_at
+            asistencias_creadas += 1
+            puts "[LOG] Attendance creada: Applicant #{applicant.id}, Event #{event.id}, Status: #{status_value}, Attendance ID: #{attendance.id}"
+          else
+            puts "[LOG] Attendance encontrada: Applicant #{applicant.id}, Event #{event.id}, Status: #{status_value}, Attendance ID: #{attendance.id}"
+          end
+
+          puts "[LOG] Predicción para Attendance ID #{attendance.id}: #{attendance.predicted_status.inspect}"
 
         rescue => e
           puts "Error procesando fila: #{e.message}"
